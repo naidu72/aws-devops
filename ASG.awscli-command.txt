@@ -1,0 +1,79 @@
+# List all ASGs
+aws autoscaling describe-auto-scaling-groups
+
+# List specific ASG
+aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names my-asg
+
+# List ASGs with specific tags
+aws autoscaling describe-auto-scaling-groups --query 'AutoScalingGroups[?Tags[?Key==`Environment` && Value==`dev`]]'
+# Create ASG with launch template
+aws autoscaling create-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --launch-template LaunchTemplateId=lt-12345678,Version='$Latest' \
+    --min-size 1 \
+    --max-size 10 \
+    --desired-capacity 3 \
+    --vpc-zone-identifier "subnet-12345,subnet-67890" \
+    --health-check-type ELB \
+    --health-check-grace-period 300
+
+# Create ASG with launch configuration (legacy)
+aws autoscaling create-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --launch-configuration-name my-launch-config \
+    --min-size 1 \
+    --max-size 5 \
+    --desired-capacity 2 \
+    --availability-zones us-east-1a us-east-1b
+# Update capacity
+aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --min-size 2 \
+    --max-size 20 \
+    --desired-capacity 5
+
+# Update launch template
+aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --launch-template LaunchTemplateId=lt-12345678,Version='$Latest'
+
+# Enable capacity rebalancing
+aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --capacity-rebalance
+# Delete ASG (must scale to 0 first)
+aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --min-size 0 \
+    --desired-capacity 0
+
+aws autoscaling delete-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --force-delete
+# Set desired capacity
+aws autoscaling set-desired-capacity \
+    --auto-scaling-group-name my-asg \
+    --desired-capacity 5 \
+    --honor-cooldown
+
+# Terminate specific instance
+aws autoscaling terminate-instance-in-auto-scaling-group \
+    --instance-id i-1234567890abcdef0 \
+    --should-decrement-desired-capacity
+# Attach instances
+aws autoscaling attach-instances \
+    --instance-ids i-1234567890abcdef0 \
+    --auto-scaling-group-name my-asg
+
+# Detach instances
+aws autoscaling detach-instances \
+    --instance-ids i-1234567890abcdef0 \
+    --auto-scaling-group-name my-asg \
+    --should-decrement-desired-capacity
+
+# Set instance protection
+aws autoscaling set-instance-protection \
+    --instance-ids i-1234567890abcdef0 \
+    --auto-scaling-group-name my-asg \
+    --protected-from-scale-in
+
