@@ -666,6 +666,12 @@ aws elbv2 create-target-group \
 4. After `unhealthy-threshold-count` failures, removed from rotation
 5. Failed instances in ASG replaced
 
+``` bash
+To push health check logs to S3
+aws elbv2 modify-target-group-attributes \
+    --target-group-arn <targetgroup ARN> \
+    --attributes Key=target_health_state.unhealthy.connection_termination.enabled,Value=true
+```
 **Common Issues:**
 - Application not listening on configured port
 - Security group blocking health check traffic
@@ -710,6 +716,9 @@ Internet
 │  │  └───────────┘  │    │  └───────────┘  │                │
 │  └─────────────────┘    └─────────────────┘                │
 └─────────────────────────────────────────────────────────────┘
+
+
+This is for ALB flow 
 ┌─────────────────────────────────────────────────────────────┐
 │              Application Load Balancer                      │
 │                                                             │
