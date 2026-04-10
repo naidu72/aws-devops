@@ -517,7 +517,32 @@ aws ec2 authorize-security-group-ingress \
   --port 443 \
   --cidr 0.0.0.0/0
 ```
-
+```bash
+Internet Request (HTTP) → VPC
+    ↓
+1. Router (Route Table)
+    ↓
+2. Network ACL (Subnet Level)
+   - Check inbound rules in order
+   - Rule 100: ALLOW HTTP 80 from 0.0.0.0/0 ✅
+    ↓
+3. Security Group (Instance Level)  
+   - Check all rules
+   - HTTP 80 from 0.0.0.0/0 ✅
+    ↓
+4. EC2 Instance receives request
+    ↓
+5. Response sent back
+    ↓
+6. Security Group (Stateful)
+   - Return traffic automatically allowed ✅
+    ↓
+7. Network ACL (Stateless)
+   - Check outbound rules in order
+   - Rule 100: ALLOW Ephemeral ports to 0.0.0.0/0 ✅
+    ↓
+8. Response reaches internet
+```
 **Network ACLs:**
 - Stateless firewall (subnet level)
 - Default: Allow all inbound/outbound
