@@ -668,9 +668,46 @@ aws elbv2 create-target-group \
 
 ``` bash
 To push health check logs to S3
-aws elbv2 modify-target-group-attributes \
-    --target-group-arn <targetgroup ARN> \
-    --attributes Key=target_health_state.unhealthy.connection_termination.enabled,Value=true
+aws elbv2 modify-load-balancer-attributes \                                                                                      --load-balancer-arn <trgetgroup ARN> \
+    --attributes Key=access_logs.s3.enabled,Value=true Key=access_logs.s3.bucket,Value=alb_targetgroup_log Key=access_logs.s3.prefix,Value=ALB-logs
+
+s3 bucket permission to push the log as below 
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::<account_number>:root"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::alb_targetgroup_log/ALB-logs/AWSLogs/account_number/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "delivery.logs.amazonaws.com"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::alb_targetgroup_log/ALB-logs/AWSLogs/account_number/*",
+            "Condition": {
+                "StringEquals": {
+                    "s3:x-amz-acl": "bucket-owner-full-control"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::127311923021:root"
+            },
+            "Action": "s3:GetBucketAcl",
+            "Resource": "arn:aws:s3:::alb_targetgroup_log"
+        }
+    ]
+}
+
+
 ```
 **Common Issues:**
 - Application not listening on configured port
