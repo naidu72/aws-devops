@@ -672,6 +672,119 @@ aws elbv2 create-target-group \
 - Health check path returning wrong status code
 - Application startup slower than health check timeout
 
+``` bash
+Internet
+    ↓
+┌─────────────────────────────────────────────────────────────┐
+│                    Internet Gateway                          │
+└─────────────────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────────────────┐
+│                 Application Load Balancer                   │
+│  ┌─────────────────┐    ┌─────────────────┐                │
+│  │  Public Subnet  │    │  Public Subnet  │                │
+│  │   AZ-1a         │    │   AZ-1b         │                │
+│  └─────────────────┘    └─────────────────┘                │
+│                                                             │
+│  Target Group: WebServer-TG                                 │
+│  ├─ Target: i-1234567890abcdef0 (10.0.3.10:80)            │
+│  ├─ Target: i-0987654321fedcba0 (10.0.4.15:80)            │
+│  ├─ Target: i-abcdef1234567890 (10.0.3.25:80)             │
+│  └─ Target: i-fedcba0987654321 (10.0.4.30:80)             │
+└─────────────────────────────────────────────────────────────┘
+    ↓ (Direct traffic routing to instances)
+┌─────────────────────────────────────────────────────────────┐
+│                 Auto Scaling Group                          │
+│  ┌─────────────────┐    ┌─────────────────┐                │
+│  │ Private Subnet  │    │ Private Subnet  │                │
+│  │   AZ-1a         │    │   AZ-1b         │                │
+│  │  ┌───────────┐  │    │  ┌───────────┐  │                │
+│  │  │ EC2 Web   │  │    │  │ EC2 Web   │  │                │
+│  │  │ Server 1  │  │    │  │ Server 2  │  │                │
+│  │  │10.0.3.10  │  │    │  │10.0.4.15  │  │                │
+│  │  └───────────┘  │    │  └───────────┘  │                │
+│  │  ┌───────────┐  │    │  ┌───────────┐  │                │
+│  │  │ EC2 Web   │  │    │  │ EC2 Web   │  │                │
+│  │  │ Server 3  │  │    │  │ Server 4  │  │                │
+│  │  │10.0.3.25  │  │    │  │10.0.4.30  │  │                │
+│  │  └───────────┘  │    │  └───────────┘  │                │
+│  └─────────────────┘    └─────────────────┘                │
+└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│              Application Load Balancer                      │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │                Target Group                         │   │
+│  │  (This is just a configuration, not a separate     │   │
+│  │   physical component)                               │   │
+│  │                                                     │   │
+│  │  Targets:                                           │   │
+│  │  • i-1234567890abcdef0 → 10.0.3.10:80 (Healthy)   │   │
+│  │  • i-0987654321fedcba0 → 10.0.4.15:80 (Healthy)   │   │
+│  │  • i-abcdef1234567890 → 10.0.3.25:80 (Healthy)    │   │
+│  │  • i-fedcba0987654321 → 10.0.4.30:80 (Healthy)    │   │
+│  │                                                     │   │
+│  │  Health Check: GET /index.html every 30s           │   │
+│  │  Load Balancing: Round Robin                        │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│  When request comes in:                                     │
+│  1. ALB receives request                                    │
+│  2. ALB looks at Target Group configuration                 │
+│  3. ALB picks a healthy target                              │
+│  4. ALB forwards request DIRECTLY to EC2 instance          │
+└─────────────────────────────────────────────────────────────┘
+                                ↓ (Direct connection)
+┌─────────────────────────────────────────────────────────────┐
+│                    EC2 Instances                            │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐│
+│  │   EC2-1   │  │   EC2-2   │  │   EC2-3   │  │   EC2-4   ││
+│  │10.0.3.10  │  │10.0.4.15  │  │10.0.3.25  │  │10.0.4.30  ││
+│  └───────────┘  └───────────┘  └───────────┘  └───────────┘│
+└─────────────────────────────────────────────────────────────┘
+Real Traffic Flow
+Step-by-Step Request Processing:
+# 1. User makes request
+curl http://my-alb-1234567890.us-east-1.elb.amazonaws.com
+
+# 2. ALB receives request
+ALB: "I received a request, let me check my Target Groups"
+
+# 3. ALB checks Target Group configuration
+ALB: "Target Group 'WebServer-TG' has these healthy targets:
+      - i-1234567890abcdef0 at 10.0.3.10:80 ✅
+      - i-0987654321fedcba0 at 10.0.4.15:80 ✅  
+      - i-abcdef1234567890 at 10.0.3.25:80 ✅
+      - i-fedcba0987654321 at 10.0.4.30:80 ✅"
+
+# 4. ALB selects target (round-robin)
+ALB: "I'll send this request to 10.0.3.10:80"
+
+# 5. ALB forwards request DIRECTLY to EC2 instance
+ALB → EC2 Instance (10.0.3.10:80)
+# No intermediate "Target Group layer" - direct connection!
+
+# 6. EC2 instance responds
+EC2 (10.0.3.10) → ALB → User
+
+How ASG Integrates ASG Registration Process
+# 1. ASG creates new EC2 instance using Launch Template
+ASG: "Creating new instance i-newinstance123 in subnet-private1"
+
+# 2. ASG automatically registers instance with Target Group
+ASG → Target Group: "Add i-newinstance123 at 10.0.3.45:80 to WebServer-TG"
+
+# 3. ALB starts health checking the new instance
+ALB: "Starting health checks for i-newinstance123"
+ALB → EC2 (10.0.3.45): "GET /index.html HTTP/1.1"
+
+# 4. Once healthy, ALB includes it in load balancing
+ALB: "i-newinstance123 is healthy, adding to rotation"
+
+# 5. Future requests can now go to the new instance
+User Request → ALB → EC2 (10.0.3.45) [New instance now receives traffic]
+
+```
 #### 6. EBS Volumes
 
 **Types:**
