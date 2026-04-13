@@ -166,6 +166,7 @@ aws sts assume-role \
   --role-session-name development-session \
   --external-id unique-external-id
 ```
+```bash
 Method 1: Resource-Based Policies
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                              ACCOUNT A                                      │
@@ -259,7 +260,7 @@ Configuration Steps:
 2️⃣ Grant Account A user permission to assume the role
 3️⃣ Account A assumes role and gets temporary credentials
 ✅ Account A uses temporary credentials to access S3
-
+```
 ### Interview Questions Deep Dive
 
 **Q1: Explain the difference between IAM Roles and IAM Users**
