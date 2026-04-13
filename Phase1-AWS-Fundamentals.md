@@ -261,6 +261,48 @@ Configuration Steps:
 3️⃣ Account A assumes role and gets temporary credentials
 ✅ Account A uses temporary credentials to access S3
 ```
+```bash
+How AssumeRole Works - Step by Step
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         AssumeRole Process                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. REQUEST PHASE
+┌─────────────────┐    sts:AssumeRole API Call    ┌─────────────────┐
+│   Your Identity │ ──────────────────────────────► │   Target Role   │
+│  (User/Service) │                                │  (Different     │
+│                 │  Parameters:                   │   Account)      │
+│ Account A       │  - RoleArn                     │ Account B       │
+│                 │  - RoleSessionName             │                 │
+└─────────────────┘  - ExternalId (optional)      └─────────────────┘
+
+2. VALIDATION PHASE
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ AWS STS checks:                                                             │
+│ ✅ Does the role's trust policy allow your identity to assume it?           │
+│ ✅ Do you have sts:AssumeRole permission for this role?                     │
+│ ✅ Are any conditions in the trust policy satisfied?                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+3. RESPONSE PHASE
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STS returns temporary credentials:                                          │
+│                                                                             │
+│ {                                                                           │
+│   "AccessKeyId": "ASIA...",           ← Temporary access key                │
+│   "SecretAccessKey": "...",           ← Temporary secret key                │
+│   "SessionToken": "...",              ← Session token (required!)           │
+│   "Expiration": "2024-01-01T12:00:00Z" ← When credentials expire          │
+│ }                                                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+4. USAGE PHASE
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Use temporary credentials to access AWS resources with the role's           │
+│ permissions until they expire (default: 1 hour, max: 12 hours)             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+```
 ### Interview Questions Deep Dive
 
 **Q1: Explain the difference between IAM Roles and IAM Users**
