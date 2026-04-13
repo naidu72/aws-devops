@@ -1323,6 +1323,70 @@ aws s3api delete-object --bucket my-bucket \
     }
   ]
 }
+```bash
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        Client-Side Encryption Flow                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Your Application/System                    AWS S3
+        │                                    │
+        │ 1. Plain text data                 │
+        ▼                                    │
+┌─────────────────┐                         │
+│ Encryption      │                         │
+│ (Your CPU)      │                         │
+│                 │                         │
+│ Plain text ──►  │                         │
+│ Encrypted data  │                         │
+└─────────────────┘                         │
+        │                                    │
+        │ 2. Send encrypted data             │
+        ├────────────────────────────────────┼──► ┌─────────────────┐
+        │    (over HTTPS)                    │    │ S3 Bucket       │
+        │                                    │    │                 │
+        │                                    │    │ Stores:         │
+        │                                    │    │ - Encrypted data│
+        │                                    │    │ - Metadata      │
+        │                                    │    └─────────────────┘
+        │                                    │
+        │ 3. Retrieve encrypted data         │
+        ◄────────────────────────────────────┼────┘
+        │                                    │
+        ▼                                    │
+┌─────────────────┐                         │
+│ Decryption      │                         │
+│ (Your CPU)      │                         │
+│                 │                         │
+│ Encrypted data ─┤                         │
+│ Plain text ◄────┤                         │
+└─────────────────┘                         │
+
+Server-Side Encryption (SSE)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         SSE-S3 Flow                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Your Application                           AWS S3
+        │                                    │
+        │ 1. Plain text data                 │
+        │    (over HTTPS)                    │
+        ├────────────────────────────────────┼──► ┌─────────────────┐
+        │                                    │    │ S3 Service      │
+        │                                    │    │                 │
+        │                                    │    │ 2. Encrypts     │
+        │                                    │    │    with S3      │
+        │                                    │    │    managed key  │
+        │                                    │    └─────────────────┘
+        │                                    │             │
+        │                                    │             ▼
+        │                                    │    ┌─────────────────┐
+        │                                    │    │ S3 Storage      │
+        │                                    │    │                 │
+        │                                    │    │ Stores:         │
+        │                                    │    │ - Encrypted data│
+        │                                    │    └─────────────────┘
+
+```
 ```
 
 ### Interview Questions Deep Dive
