@@ -166,6 +166,99 @@ aws sts assume-role \
   --role-session-name development-session \
   --external-id unique-external-id
 ```
+Method 1: Resource-Based Policies
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              ACCOUNT A                                      │
+│                                                                             │
+│  ┌─────────────────┐                                                        │
+│  │   IAM User      │                                                        │
+│  │   "Developer"   │                                                        │
+│  │                 │                                                        │
+│  │ No special      │                                                        │
+│  │ permissions     │                                                        │
+│  │ needed          │                                                        │
+│  └─────────────────┘                                                        │
+│           │                                                                 │
+│           │ Direct Access                                                   │
+│           │ (using AWS CLI/SDK)                                             │
+└───────────┼─────────────────────────────────────────────────────────────────┘
+            │
+            │ ✅ Access Granted by Resource Policy
+            ▼
+┌───────────┼─────────────────────────────────────────────────────────────────┐
+│           │                    ACCOUNT B                                    │
+│           │                                                                 │
+│  ┌────────▼────────┐     ┌─────────────────────────────────────────────┐   │
+│  │   S3 Bucket     │     │         Resource Policy                    │   │
+│  │  "my-bucket"    │◄────┤                                             │   │
+│  │                 │     │ {                                           │   │
+│  │ ✅ Policy allows │     │   "Principal": {                           │   │
+│  │   Account A     │     │     "AWS": "arn:aws:iam::ACCOUNT-A:user/*" │   │
+│  │   access        │     │   },                                        │   │
+│  └─────────────────┘     │   "Action": ["s3:GetObject", "s3:PutObject"]│   │
+│                          │ }                                           │   │
+│                          └─────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Configuration Steps:
+1️⃣ Attach resource policy to S3 bucket in Account B
+   - Specify Account A principals in "Principal" field
+   - Define allowed actions
+✅ Done! Account A can now access the bucket directly
+
+Method 2: Cross-Account IAM Roles
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              ACCOUNT A                                      │
+│                                                                             │
+│  ┌─────────────────┐     ┌─────────────────────────────────────────────┐   │
+│  │   IAM User      │     │         IAM Policy                          │   │
+│  │   "Developer"   │◄────┤                                             │   │
+│  │                 │     │ {                                           │   │
+│  │ 🔑 Has permission│     │   "Action": "sts:AssumeRole",              │   │
+│  │   to assume     │     │   "Resource": "arn:aws:iam::ACCOUNT-B:     │   │
+│  │   cross-account │     │                role/CrossAccountRole"      │   │
+│  │   role          │     │ }                                           │   │
+│  └─────────────────┘     └─────────────────────────────────────────────┘   │
+│           │                                                                 │
+│           │ 1. AssumeRole API Call                                          │
+│           │ sts:AssumeRole                                                  │
+└───────────┼─────────────────────────────────────────────────────────────────┘
+            │
+            ▼
+┌───────────┼─────────────────────────────────────────────────────────────────┐
+│           │                    ACCOUNT B                                    │
+│           │                                                                 │
+│  ┌────────▼────────┐     ┌─────────────────────────────────────────────┐   │
+│  │ CrossAccount    │     │         Trust Policy                        │   │
+│  │ IAM Role        │◄────┤                                             │   │
+│  │                 │     │ {                                           │   │
+│  │ 🔑 Trusted by   │     │   "Principal": {                           │   │
+│  │   Account A     │     │     "AWS": "arn:aws:iam::ACCOUNT-A:user/*" │   │
+│  │                 │     │   },                                        │   │
+│  │ 📋 Has S3       │     │   "Action": "sts:AssumeRole"               │   │
+│  │   permissions   │     │ }                                           │   │
+│  └─────────────────┘     └─────────────────────────────────────────────┘   │
+│           │                                                                 │
+│           │ 2. Temporary Credentials                                        │
+│           │ (Access Key, Secret, Session Token)                             │
+│           ▼                                                                 │
+│  ┌─────────────────┐     ┌─────────────────────────────────────────────┐   │
+│  │   S3 Bucket     │     │         Permissions Policy                  │   │
+│  │  "my-bucket"    │◄────┤                                             │   │
+│  │                 │     │ {                                           │   │
+│  │ ✅ Accessed     │     │   "Action": ["s3:GetObject", "s3:PutObject"]│   │
+│  │   using role    │     │   "Resource": "arn:aws:s3:::my-bucket/*"   │   │
+│  │   credentials   │     │ }                                           │   │
+│  └─────────────────┘     └─────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Configuration Steps:
+1️⃣ Create IAM role in Account B with:
+   - Trust policy allowing Account A to assume it
+   - Permissions policy for S3 access
+2️⃣ Grant Account A user permission to assume the role
+3️⃣ Account A assumes role and gets temporary credentials
+✅ Account A uses temporary credentials to access S3
 
 ### Interview Questions Deep Dive
 
