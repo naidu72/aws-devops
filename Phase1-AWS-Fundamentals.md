@@ -1960,7 +1960,61 @@ aws cloudfront create-invalidation \
   --distribution-id E123ABC \
   --paths "/*"
 ```
+```bash
+CloudFront = Content Delivery Network (CDN)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           CloudFront Purpose                                │
+└─────────────────────────────────────────────────────────────────────────────┘
 
+Users Worldwide                    CloudFront Edge Locations                Origin
+     │                                      │                                │
+     │ 1. Request content                   │                                │
+     ├──────────────────────────────────────┼──► Edge Location              │
+     │                                      │   (Cached content)            │
+     │                                      │                                │
+     │ 2. If cache miss                     │                                │
+     │                                      ├────────────────────────────────┼──► Your Server
+     │                                      │   Fetch from origin           │    (S3, ALB, etc.)
+     │                                      │                                │
+     │ 3. Serve cached content              │                                │
+     ◄──────────────────────────────────────┼────                           │
+                                            │                                │
+
+Benefits:
+✅ Faster content delivery (caching)
+✅ Reduced origin server load
+✅ DDoS protection
+✅ Global distribution
+
+CloudFront + Route 53 for Complete HA Solution
+Combined Architecture:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Complete HA Architecture                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Users                Route 53              CloudFront           Origins
+  │                     │                      │                   │
+  │ 1. DNS Query        │                      │                   │
+  ├─────────────────────┼──► Health Checks    │                   │
+  │   example.com       │   Monitor origins   │                   │
+  │                     │                      │                   │
+  │ 2. Return healthy   │                      │                   │
+  │    CloudFront URL   │                      │                   │
+  ◄─────────────────────┼────                 │                   │
+  │ d123.cloudfront.net │                      │                   │
+  │                     │                      │                   │
+  │ 3. Request content  │                      │                   │
+  ├─────────────────────┼──────────────────────┼──► Edge Cache    │
+  │                     │                      │                   │
+  │                     │                      │ 4. Origin        │
+  │                     │                      │    Failover      │
+  │                     │                      ├───────────────────┼──► Primary
+  │                     │                      │   (if primary     │    Origin
+  │                     │                      │    fails)         │    ❌
+  │                     │                      ├───────────────────┼──► Secondary
+  │                     │                      │                   │    Origin ✅
+
+```
 ---
 
 ## Phase 1 Interview Practice Questions
