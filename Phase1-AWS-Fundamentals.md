@@ -636,7 +636,7 @@ aws iam create-policy-version --policy-arn arn:aws:iam::ACCOUNT-ID:policy/S3Read
 5. Performance requirement → Latest generation (m5 > m4)
 ```
 
-#### 2. Security Groups & Network ACLs
+#### 2. Security Groups & Network ACL(Access Control Lists)
 
 **Security Groups:**
 - Stateful firewall (instance level)
