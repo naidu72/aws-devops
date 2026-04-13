@@ -1323,6 +1323,7 @@ aws s3api delete-object --bucket my-bucket \
     }
   ]
 }
+```
 ```bash
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                        Client-Side Encryption Flow                          │
@@ -1386,7 +1387,6 @@ Your Application                           AWS S3
         │                                    │    │ - Encrypted data│
         │                                    │    └─────────────────┘
 
-```
 ```
 
 ### Interview Questions Deep Dive
