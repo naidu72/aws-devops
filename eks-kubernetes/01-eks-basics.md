@@ -138,7 +138,7 @@ EKS manages these add-ons for you:
 # Enables service discovery (service-name.namespace.svc.cluster.local)
 # Deployed as Deployment in kube-system namespace
 to test the kube-dns run the following command 
-kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup cs-core.cs
+kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup <Servicename.namespace> //ex: vault.default
 ```
 
 **Why it matters:**
