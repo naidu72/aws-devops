@@ -137,6 +137,8 @@ EKS manages these add-ons for you:
 # Kubernetes DNS server
 # Enables service discovery (service-name.namespace.svc.cluster.local)
 # Deployed as Deployment in kube-system namespace
+to test the kube-dns run the following command 
+kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup cs-core.cs
 ```
 
 **Why it matters:**
@@ -149,6 +151,8 @@ EKS manages these add-ons for you:
 # Network plugin that implements Services
 # Creates iptables rules for service routing
 # Runs on every node as DaemonSet
+to see now the routes are working by kube-proxy the following command need to executed in side the woker node 
+iptables -t nat -L KUBE-SERVICES
 ```
 
 **Why it matters:**
