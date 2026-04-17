@@ -1,0 +1,44 @@
+# httpbin sample for Istio labs (matches VirtualService port 8000 in 06-hands-on-labs.md)
+# Image: https://hub.docker.com/r/kennethreitz/httpbin
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin
+  labels:
+    app: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+  template:
+    metadata:
+      labels:
+        app: httpbin
+    spec:
+      containers:
+        - name: httpbin
+          image: docker.io/kennethreitz/httpbin:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+  labels:
+    app: httpbin
+spec:
+  selector:
+    app: httpbin
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 80

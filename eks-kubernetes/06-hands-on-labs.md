@@ -251,8 +251,9 @@ kubectl create namespace production
 # Label for injection
 kubectl label namespace production istio-injection=enabled
 
-# Deploy httpbin test service
-kubectl apply -f /home/frontier/interview_coverage/eks-kubernetes/samples/httpbin.yaml -n production
+# Deploy httpbin test service (file lives in eks-kubernetes/samples/)
+cd /home/frontier/devops-interview-prep/aws-devops
+kubectl apply -f eks-kubernetes/samples/httpbin.yaml -n production
 
 # Check pods have sidecar (2/2 containers = app + Envoy)
 kubectl get pods -n production
