@@ -1,0 +1,104 @@
+# frontend.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: demo-istio
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Istio Demo</title>
+        <style>
+            body { font-family: Arial; max-width: 800px; margin: 50px auto; }
+            button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+            #response { margin-top: 20px; padding: 20px; border: 1px solid #ccc; background: #f5f5f5; }
+        </style>
+    </head>
+    <body>
+        <h1>Istio Microservices Demo</h1>
+        <p>This frontend calls the backend service through Istio service mesh.</p>
+        <button onclick="callBackend()">Call Backend API</button>
+        <div id="response"></div>
+        
+        <script>
+            async function callBackend() {
+                try {
+                    const response = await fetch('/api');
+                    const data = await response.text();
+                    document.getElementById('response').innerHTML = 
+                        '<h3>Backend Response:</h3><pre>' + data + '</pre>';
+                } catch (error) {
+                    document.getElementById('response').innerHTML = 
+                        '<h3>Error:</h3><pre>' + error + '</pre>';
+                }
+            }
+        </script>
+    </body>
+    </html>
+  nginx.conf: |
+    events { }
+    http {
+        server {
+            listen 80;
+            location / {
+                root /usr/share/nginx/html;
+                index index.html;
+            }
+            # /api from browsers goes through the Istio ingress VirtualService -> backend.
+            # This block only matters if you curl the frontend Service directly (bypassing ingress).
+            location /api {
+                proxy_pass http://backend.demo-istio.svc.cluster.local:8080;
+            }
+        }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: demo-istio
+  labels:
+    app: frontend
+    service: frontend
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: demo-istio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: v1
+    spec:
+      containers:
+      - name: frontend
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+        - name: config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: config
+        configMap:
+          name: frontend-config

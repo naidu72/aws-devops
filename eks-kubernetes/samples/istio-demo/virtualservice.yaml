@@ -1,0 +1,35 @@
+# virtualservice.yaml
+#
+# Traffic flow (with istio-ingress port-forward to :80):
+#   /        -> frontend:80 (nginx serves HTML/JS)
+#   /api     -> backend:8080 (mesh route from ingress; avoids nginx proxy_pass issues)
+#
+# Order matters: more specific matches must come FIRST.
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: frontend
+  namespace: demo-istio
+spec:
+  hosts:
+  - "*"
+  gateways:
+  # Same namespace as this VirtualService — short name is enough
+  - demo-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api
+    route:
+    - destination:
+        host: backend
+        port:
+          number: 8080
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: frontend
+        port:
+          number: 80

@@ -1,0 +1,26 @@
+# backend-v2.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-v2
+  namespace: demo-istio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: backend
+        version: v2
+    spec:
+      containers:
+      - name: backend
+        image: hashicorp/http-echo
+        args:
+        - "-text={\"version\":\"v2\",\"message\":\"Hello from Backend v2 - NEW VERSION!\"}"
+        - "-listen=:8080"
+        ports:
+        - containerPort: 8080

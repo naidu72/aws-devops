@@ -317,6 +317,89 @@ curl http://localhost:8080/status/200
 # Expected: HTTP 200 response
 ```
 
+#### Using the `dev` namespace (instead of `production`)
+
+The steps above assume **Gateway + VirtualService + httpbin** all live in the **same** namespace (the lab uses `production`). If you deploy httpbin to **`dev`**, you must put the **Gateway and VirtualService in `dev` too** (not leave them on `production`). Otherwise the route either points at the wrong Kubernetes Service or never attaches, and you often see **404** from Envoy (“no route”) or **503**.
+
+**Option A — apply the ready-made manifest (recommended for `dev`):**
+
+```bash
+cd /home/frontier/devops-interview-prep/aws-devops
+kubectl label namespace dev istio-injection=enabled --overwrite
+kubectl apply -f eks-kubernetes/samples/httpbin.yaml -n dev
+kubectl apply -f eks-kubernetes/samples/istio-httpbin-gateway-dev.yaml
+
+# Port-forward YOUR ingress Service (often istio-ingress namespace), then curl with the Gateway host:
+kubectl port-forward -n istio-ingress svc/istio-ingress 8080:80 &
+curl -v -H "Host: httpbin.lab" http://127.0.0.1:8080/status/200
+```
+
+**Option B — edit the inline `gateway.yaml`:** set `metadata.namespace` to `dev` for **both** the `Gateway` and `VirtualService`, set `destination.host` to `httpbin.dev.svc.cluster.local` (or keep short name `httpbin` while the VirtualService stays in `dev`), and set:
+
+```yaml
+gateways:
+  - dev/httpbin-gateway
+```
+
+**Verify before curling (fixes most 404s):**
+
+```bash
+kubectl get gateway,virtualservice -n dev
+# Both should exist and VirtualService GATEWAYS column should list your Gateway
+
+istioctl analyze -n dev
+```
+
+**If you still get 404**, confirm the ingress pod picked up config:
+
+```bash
+# Classic install:
+istioctl proxy-config route deploy/istio-ingressgateway -n istio-system | grep -E 'httpbin|8080|virtual' || true
+
+# Helm "gateway" chart (common): Deployment often named istio-ingress in namespace istio-ingress
+istioctl proxy-config route deploy/istio-ingress -n istio-ingress | grep -E 'httpbin|virtual' || true
+```
+
+Then retry (see **dedicated Host** below if you use `istio-httpbin-gateway-dev.yaml`):
+
+```bash
+curl -v http://localhost:8080/status/200
+```
+
+#### IST0145 — Gateway conflicts with another Gateway (same ingress, port 80, hosts `*`)
+
+If `istioctl analyze` reports **IST0145** (e.g. conflict with `demo-istio/demo-gateway`), two `Gateway` objects are bound to the **same** ingress workload (`istio=ingress` or `istio=ingressgateway`), **same port**, and overlapping **`hosts`**. Istio allows only one such listener configuration for that combination.
+
+**Fix (pick one):**
+
+1. **Use a dedicated host** (recommended): the sample `istio-httpbin-gateway-dev.yaml` uses host **`httpbin.lab`** instead of `*`. Send that Host header and port-forward the correct Service:
+
+```bash
+kubectl get svc -n istio-ingress
+kubectl port-forward -n istio-ingress svc/istio-ingress 8080:80 &
+curl -v -H "Host: httpbin.lab" http://127.0.0.1:8080/status/200
+```
+
+2. **Remove or narrow the other Gateway** (e.g. demo `demo-gateway`) if you do not need `hosts: *` on the same ingress.
+
+3. **Different port** on one of the Gateways (less common for HTTP).
+
+#### Helm ingress namespace (`istio-ingress`) vs `istio-system`
+
+Many clusters install the ingress **Deployment** in `istio-ingress` with label **`istio=ingress`**, not `istio-system` / `istio-ingressgateway`. Discover yours:
+
+```bash
+kubectl get deploy -A -l istio=ingress
+kubectl get svc -n istio-ingress
+```
+
+#### Other analyze messages (optional)
+
+- **IST0103** (pod missing Istio proxy): label the namespace `istio-injection=enabled` and **restart** the Deployment (`kubectl rollout restart deploy/...`), or enable ambient/waypoint per your Istio profile.
+- **IST0118** (port name): name Service ports for protocol, e.g. `name: http` or `name: http-web` on port 80.
+
+**Note:** A **404** here is almost always Envoy “no matching route” (wrong namespace / VirtualService not bound to Gateway / only Gateway applied). It is **not** httpbin’s “/status/404” response—that would still be a normal 404 body from the app, but `/status/200` should return **200**.
+
 ### Verification Commands
 
 ```bash

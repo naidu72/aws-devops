@@ -1,0 +1,19 @@
+# virtualservice-backend.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: backend
+  namespace: demo-istio
+spec:
+  hosts:
+  - backend
+  http:
+  - route:
+    - destination:
+        host: backend
+        subset: v1
+      weight: 90
+    - destination:
+        host: backend
+        subset: v2
+      weight: 10

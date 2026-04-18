@@ -1,0 +1,46 @@
+# Istio Gateway + VirtualService for Lab 2 (namespace `dev`)
+#
+# Apply AFTER httpbin is running:
+#   kubectl apply -f eks-kubernetes/samples/httpbin.yaml -n dev
+#
+# IST0145 (Gateway conflict): Two Gateway resources cannot share the same ingress
+# workload selector + port + hosts "*" — e.g. if demo-istio/demo-gateway already
+# exists. This manifest uses a DEDICATED host "httpbin.lab" so it does not overlap.
+#
+# Selector: use labels from YOUR ingress Deployment:
+#   kubectl get deploy,pods -n istio-ingress -l istio=ingress --show-labels
+# Default Helm "gateway" chart often uses label: istio=ingress (not istio=ingressgateway).
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: httpbin-gateway
+  namespace: dev
+spec:
+  selector:
+    istio: ingress
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        # Must be unique vs other Gateways on same ingress + port (not "*")
+        - "httpbin.lab"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: httpbin
+  namespace: dev
+spec:
+  hosts:
+    - "httpbin.lab"
+  gateways:
+    - dev/httpbin-gateway
+  http:
+    - route:
+        - destination:
+            host: httpbin.dev.svc.cluster.local
+            port:
+              number: 8000
