@@ -270,9 +270,9 @@ kubectl exec -it <pod> -n production -- curl localhost:8080/health
 
 # Check CPU/memory usage
 kubectl top pod -n production
-```"
+```
 
----
+
 
 ## Monitoring and Observability Questions
 
@@ -314,8 +314,8 @@ kubectl top pod -n production
 - SLI: 99.9% availability (max 43 seconds downtime/month)
 - Error budget: If we exceed error budget, no new deployments until recovery"
 
----
-
+```
+```
 ## Best Practices Questions
 
 ### Q12: "What are your Kubernetes best practices?"
@@ -361,5 +361,5 @@ kubectl top pod -n production
 - Implement resource quotas per namespace
 - Monitor and alert on cost anomalies"
 
----
+```
 
