@@ -1,5 +1,8 @@
 # DevOps Engineer Interview Preparation - Complete Guide
 
+> **One-stop map of every file + Istio/K8s lab notes:** [`MASTER_COVERAGE.md`](MASTER_COVERAGE.md) (same folder as this file).  
+> **Deep vs summary vs missing topics:** [`CONCEPT_COVERAGE_MATRIX.md`](CONCEPT_COVERAGE_MATRIX.md).
+
 ## Welcome!
 
 This comprehensive 1-week interview preparation guide covers all essential DevOps and AWS topics for an advanced engineer. The materials are structured as a 5-phase program, progressing from fundamentals through real-world scenarios.

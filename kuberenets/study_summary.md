@@ -1,5 +1,8 @@
 # Kubernetes interview prep — progress summary
 
+> **Full-repo single index (phases + `kuberenets/` + lab notes):** [`MASTER_COVERAGE.md`](../MASTER_COVERAGE.md) (repository root).  
+> **Gap analysis (what is Deep vs thin vs missing):** [`CONCEPT_COVERAGE_MATRIX.md`](../CONCEPT_COVERAGE_MATRIX.md).
+
 **Location:** `/home/frontier/devops-interview-prep/aws-devops/kuberenets`  
 **Navigation:** See [README.md](README.md) and [INDEX_COMPLETE_STUDY_PACKAGE.md](INDEX_COMPLETE_STUDY_PACKAGE.md).
 

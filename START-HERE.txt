@@ -2,6 +2,9 @@
         🚀 DEVOPS ENGINEER INTERVIEW PREPARATION - START HERE 🚀
 ================================================================================
 
+>>> SINGLE INDEX FOR EVERYTHING IN THIS REPO: MASTER_COVERAGE.md (repo root) <<<
+>>> TOPIC GAPS / DEPTH AUDIT: CONCEPT_COVERAGE_MATRIX.md <<<
+
 Welcome! You have a comprehensive 1-week DevOps interview prep program ready.
 
 📁 FILES CREATED (9 Total)

@@ -1,5 +1,7 @@
 # Kubernetes interview prep — file index
 
+> **Entire repo (phases + this folder + lab notes):** [`MASTER_COVERAGE.md`](../MASTER_COVERAGE.md)
+
 **Folder:** `/home/frontier/devops-interview-prep/aws-devops/kuberenets`
 
 All markdown paths below are **relative to this directory** (same folder as this `README.md`).
