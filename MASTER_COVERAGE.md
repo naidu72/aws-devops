@@ -24,7 +24,7 @@ Use the matrix when you feel “something’s missing”—it maps **every major
 | Track | Audience | Path |
 |--------|----------|------|
 | **A — AWS / broad DevOps** | Platform, AWS services, phases, mock interviews | [§2 Program phases](#2-program-phases-root-markdown-files) → [§4 Meta & quick refs](#4-meta--quick-reference) |
-| **B — Deep Kubernetes** | CKA-style depth, EKS, networking, operators | [§3 Kubernetes deep dive (`kuberenets/`)](#3-kubernetes-deep-dive-kuberenets) → `kuberenets/INDEX_COMPLETE_STUDY_PACKAGE.md` |
+| **B — Deep Kubernetes** | CKA-style depth, EKS, networking, operators | **Linear track:** [§3.0 `kuberenets_v1/`](#30-modular-kubernetes-prep-kuberenets_v1) → then [§3 Kubernetes deep dive (`kuberenets/`)](#3-kubernetes-deep-dive-kuberenets) for CRDs/EKS extras |
 
 **Suggested first week (combined):** Days 1–2 Phase 1 + `kuberenets/core_resources_*`; Days 3–4 Phase 2–3 + `kuberenets/networking_deep_dive.md` + `kuberenets/eks_architecture_guide.md`; Days 5–7 Phase 4–5 + `kuberenets/MONITORING_SCANNING_CLOUD_TOOLS.md` + mock sections.
 
@@ -49,6 +49,22 @@ Use the matrix when you feel “something’s missing”—it maps **every major
 ---
 
 ## 3. Kubernetes deep dive (`kuberenets/`)
+
+### 3.0 Modular Kubernetes prep (`kuberenets_v1/`)
+
+**Folder:** [`kuberenets_v1/`](kuberenets_v1/) — numbered chapters (architecture → ops), interview Q&A, and CKA-style labs in one place.
+
+| File | Role |
+|------|------|
+| [kuberenets_v1/README.md](kuberenets_v1/README.md) | Study map, prerequisites, day-by-day order |
+| [kuberenets_v1/01-architecture-and-components.md](kuberenets_v1/01-architecture-and-components.md) … `06` | Core theory with examples |
+| [kuberenets_v1/09-crds-and-operators.md](kuberenets_v1/09-crds-and-operators.md) | CRDs, custom resources, operators |
+| [kuberenets_v1/07-interview-questions.md](kuberenets_v1/07-interview-questions.md) | Themed Q&A |
+| [kuberenets_v1/08-hands-on-labs.md](kuberenets_v1/08-hands-on-labs.md) | Hands-on tasks + solution outlines |
+
+Use **`kuberenets_v1`** for a clean linear path; use **`kuberenets/`** below for topic-specific deep dives (EKS, CRDs, long-form networking).
+
+---
 
 **Folder:** `kuberenets/` (spelling preserved in tree).
 

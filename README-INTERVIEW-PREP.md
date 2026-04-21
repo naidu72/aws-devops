@@ -1,7 +1,8 @@
 # DevOps Engineer Interview Preparation - Complete Guide
 
 > **One-stop map of every file + Istio/K8s lab notes:** [`MASTER_COVERAGE.md`](MASTER_COVERAGE.md) (same folder as this file).  
-> **Deep vs summary vs missing topics:** [`CONCEPT_COVERAGE_MATRIX.md`](CONCEPT_COVERAGE_MATRIX.md).
+> **Deep vs summary vs missing topics:** [`CONCEPT_COVERAGE_MATRIX.md`](CONCEPT_COVERAGE_MATRIX.md).  
+> **Linear Kubernetes prep (architecture → labs + interview Q&A):** [`kuberenets_v1/README.md`](kuberenets_v1/README.md).
 
 ## Welcome!
 
@@ -32,6 +33,8 @@ This comprehensive 1-week interview preparation guide covers all essential DevOp
 - Docker & Container Concepts - 90 min
 - AWS ECS (Elastic Container Service) - 60 min
 - AWS EKS & Kubernetes Fundamentals - 90 min
+
+**Kubernetes deep dive (modular):** [`kuberenets_v1/README.md`](kuberenets_v1/README.md) — numbered chapters, CKA-style labs, themed interview questions (use after or alongside Phase 2 K8s section).
 
 **Interview Questions:** 15+ deep-dive questions
 **Study Time:** 5-6 hours
