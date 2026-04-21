@@ -1,5 +1,7 @@
 # KUBERNETES INTERVIEW PREPARATION - PHASE 1 COMPLETE ✅
 
+> **Update (2026-04-21):** Paths and inventory were corrected for `/home/frontier/devops-interview-prep/aws-devops/kuberenets`. For the **current** master list and links, open [README.md](README.md), [study_summary.md](study_summary.md), or [INDEX_COMPLETE_STUDY_PACKAGE.md](INDEX_COMPLETE_STUDY_PACKAGE.md). This file keeps the original “Phase 1” narrative for reference.
+
 ## EXECUTIVE SUMMARY
 
 **Status:** Phase 1 (Core Foundations) Complete - 3/16 Todos Completed
@@ -89,7 +91,7 @@
 - Cross-namespace policies
 - NetworkPolicy debugging
 
-**Study Materials:** Ready in `/tmp/networking_deep_dive.md` (complete payment system example)
+**Study Materials:** See `networking_deep_dive.md` in `/home/frontier/devops-interview-prep/aws-devops/kuberenets` (includes NetworkPolicy scenarios).
 
 ---
 
@@ -165,7 +167,7 @@
 ## 🎯 IMMEDIATE ACTION ITEMS (Next 24 Hours)
 
 ### Task 1: Complete NetworkPolicy Module (2-3 hours)
-- [ ] Read `/tmp/networking_deep_dive.md` NetworkPolicy section
+- [x] Read `networking_deep_dive.md` NetworkPolicy section (same folder as this file)
 - [ ] Write 3 NetworkPolicy scenarios:
   - [ ] Default deny + allow frontend
   - [ ] Cross-namespace communication
@@ -332,13 +334,16 @@
 
 ## 🎓 LEARNING RESOURCES READY
 
-All study materials are available in `/tmp/`:
+All study materials live in **`/home/frontier/devops-interview-prep/aws-devops/kuberenets/`** (not `/tmp`):
+- `README.md` - Master file index
 - `k8s_study_guide.md` - Master study plan
-- `core_resources_guide.yaml` - YAML reference
+- `core_resources_guide.yaml` - Compact YAML reference
 - `core_resources_interview_qa.md` - Q&A with answers
 - `storage_concepts_guide.md` - Storage deep dive
 - `networking_deep_dive.md` - Networking + policies
-- `study_summary.md` - Progress tracking
+- `MONITORING_SCANNING_CLOUD_TOOLS.md` - Observability & cloud tools
+- `CICD_DEPLOYMENT_TOOLS.md` - ArgoCD, Jenkins, GitHub Actions, Azure DevOps
+- `study_summary.md` - Progress tracking (updated)
 
 **Total Content:** ~2500+ lines of comprehensive study materials
 

@@ -7,36 +7,43 @@
 
 ## Generated Study Materials
 
-### Core Modules (Completed)
-1. ✅ **CRDs & Operators Deep Dive** → `/tmp/crds_operators_guide.md`
+### Core modules (completed) — `/home/frontier/devops-interview-prep/aws-devops/kuberenets`
+
+1. ✅ **CRDs & Operators Deep Dive** → `crds_operators_guide.md`
    - CRD structure, validation, webhooks
    - Operator pattern, reconciliation loop
    - Workspace examples (Jaeger, cert-manager, ALB controller)
 
-2. ✅ **AWS EKS Architecture** → `/tmp/eks_architecture_guide.md`
+2. ✅ **AWS EKS Architecture** → `eks_architecture_guide.md`
    - Control plane, node groups, IRSA
    - Managed add-ons, VPC integration
    - Production checklist, troubleshooting
 
-3. ✅ **Azure AKS Architecture** → `/tmp/aks_architecture_guide.md`
+3. ✅ **Azure AKS Architecture** → `aks_architecture_guide.md`
    - Control plane, node pools (system vs user)
    - Managed identity vs service principal
    - Network integration, Azure AD RBAC
    - AKS vs EKS comparison matrix
 
-4. ✅ **Bare Metal Kubernetes** → `/tmp/bare_metal_kubernetes_guide.md`
+4. ✅ **Bare Metal Kubernetes** → `bare_metal_kubernetes_guide.md`
    - kubeadm cluster bootstrap
    - CNI choice (Calico vs Cilium)
    - HA control plane setup
    - Storage options (local, NFS, Ceph)
 
-5. ✅ **Additional Topics Summary** → `/tmp/remaining_modules_summary.md`
+5. ✅ **Additional Topics Summary** → `remaining_modules_summary.md`
    - Multi-architecture deployments (x64, ARM64)
    - Scaling & HA (HPA, cluster autoscaler, Karpenter, PDB)
    - Security deep dive (RBAC, PSS, image scanning)
    - Observability stack (Prometheus, Grafana, Loki, Jaeger)
    - Helm & GitOps (ArgoCD)
    - Hands-on practicals checklist
+
+6. ✅ **Monitoring, scanning, AWS/Azure tools** → `MONITORING_SCANNING_CLOUD_TOOLS.md`
+
+7. ✅ **CI/CD (ArgoCD, Jenkins, GitHub Actions, Azure DevOps)** → `CICD_DEPLOYMENT_TOOLS.md`
+
+8. ✅ **Navigation** → `README.md`, `study_summary.md`, `INDEX_COMPLETE_STUDY_PACKAGE.md`
 
 ---
 
@@ -201,14 +208,18 @@
 
 ---
 
-## Study Materials Location
+## Study materials location
 
-**Cloud-Native Learning Platform:**
-- `/tmp/crds_operators_guide.md` — CRDs, operators, workspace examples
-- `/tmp/eks_architecture_guide.md` — EKS deep dive, IRSA, production setup
-- `/tmp/aks_architecture_guide.md` — AKS architecture, managed identity, comparison
-- `/tmp/bare_metal_kubernetes_guide.md` — kubeadm, CNI, HA control plane
-- `/tmp/remaining_modules_summary.md` — Multi-arch, scaling, security, observability, Helm/GitOps
+**Folder:** `/home/frontier/devops-interview-prep/aws-devops/kuberenets`
+
+- `crds_operators_guide.md` — CRDs, operators, workspace examples
+- `eks_architecture_guide.md` — EKS deep dive, IRSA, production setup
+- `aks_architecture_guide.md` — AKS architecture, managed identity, comparison
+- `bare_metal_kubernetes_guide.md` — kubeadm, CNI, HA control plane
+- `remaining_modules_summary.md` — Multi-arch, scaling, security, observability, Helm/GitOps
+- `MONITORING_SCANNING_CLOUD_TOOLS.md` — Metrics, logs, mesh, scanning, cloud secrets/monitoring
+- `CICD_DEPLOYMENT_TOOLS.md` — ArgoCD, Jenkins, GitHub Actions, Azure Pipelines
+- `README.md` — Full file index and links
 
 **Workspace References:**
 - `hansen-cloud-native-suite/eksv2/` — EKS Terraform configuration

@@ -3,10 +3,12 @@
 
 ---
 
-## 📚 Study Materials Generated (4,500+ lines)
+## 📚 Study materials (folder: `/home/frontier/devops-interview-prep/aws-devops/kuberenets`)
+
+Paths below are **filenames in that folder** (same directory as this index).
 
 ### 1. **CRDs & Operators Deep Dive** 
-📄 **File:** `/tmp/crds_operators_guide.md` (~900 lines)
+📄 **File:** `crds_operators_guide.md` (~900 lines)
 
 **Topics Covered:**
 - CRD structure, versioning, validation schemas
@@ -24,7 +26,7 @@
 ---
 
 ### 2. **AWS EKS Architecture Deep Dive**
-📄 **File:** `/tmp/eks_architecture_guide.md` (~1,100 lines)
+📄 **File:** `eks_architecture_guide.md` (~1,100 lines)
 
 **Topics Covered:**
 - EKS control plane (multi-AZ, managed, 99.95% SLA)
@@ -41,7 +43,7 @@
 ---
 
 ### 3. **Azure AKS Architecture Deep Dive**
-📄 **File:** `/tmp/aks_architecture_guide.md` (~950 lines)
+📄 **File:** `aks_architecture_guide.md` (~950 lines)
 
 **Topics Covered:**
 - AKS control plane (managed by Azure, separate tenant)
@@ -59,7 +61,7 @@
 ---
 
 ### 4. **Bare Metal Kubernetes**
-📄 **File:** `/tmp/bare_metal_kubernetes_guide.md` (~800 lines)
+📄 **File:** `bare_metal_kubernetes_guide.md` (~800 lines)
 
 **Topics Covered:**
 - kubeadm cluster bootstrap (step-by-step)
@@ -76,7 +78,7 @@
 ---
 
 ### 5. **Remaining Modules Summary**
-📄 **File:** `/tmp/remaining_modules_summary.md` (~800 lines)
+📄 **File:** `remaining_modules_summary.md` (~800 lines)
 
 **Quick Reference for:**
 - Multi-architecture deployments (x64, ARM64, buildx)
@@ -93,7 +95,16 @@
 ---
 
 ### 6. **Final Summary & Progress**
-📄 **File:** `/tmp/INTERVIEW_PREP_COMPLETE_FINAL.md` (~1,000 lines)
+📄 **File:** `INTERVIEW_PREP_COMPLETE_FINAL.md` (~1,000 lines)
+
+### 7. **Monitoring, Scanning, Cloud Tools**
+📄 **File:** `MONITORING_SCANNING_CLOUD_TOOLS.md` — Prometheus, Grafana, Loki, ELK, Jaeger, Istio, Cilium, Trivy, Falco, AWS/Azure services, Vault.
+
+### 8. **CI/CD (ArgoCD, Jenkins, GitHub Actions, Azure DevOps)**
+📄 **File:** `CICD_DEPLOYMENT_TOOLS.md`
+
+### 9. **Core resources & navigation**
+📄 **Files:** `core_resources_interview_qa.md`, `core_resources_guide.yaml`, `README.md`, `study_summary.md`
 
 **Includes:**
 - Complete checklist of all topics mastered
@@ -234,7 +245,10 @@ Day 7: Interview day! 🚀
 | AKS Architecture | aks_architecture_guide.md | 950 | 2 hrs |
 | Bare Metal K8s | bare_metal_kubernetes_guide.md | 800 | 2 hrs |
 | Advanced Topics | remaining_modules_summary.md | 800 | 2 hrs |
-| **TOTAL** | **5 guides** | **~4,500** | **~11 hrs** |
+| Monitoring & cloud tools | MONITORING_SCANNING_CLOUD_TOOLS.md | — | 2–3 hrs |
+| CI/CD | CICD_DEPLOYMENT_TOOLS.md | — | 2–3 hrs |
+| Core YAML + Q&A | core_resources_guide.yaml, core_resources_interview_qa.md | — | 1–2 hrs |
+| **TOTAL** | **See README.md** | **10,000+** | **40–50 hrs** |
 
 ---
 
@@ -256,8 +270,8 @@ Day 7: Interview day! 🚀
 
 ---
 
-**Generated:** 2024-01-15  
-**Total Study Material:** 4,518 lines  
+**Generated:** 2026-04-21 (paths corrected for `/home/frontier/devops-interview-prep/aws-devops/kuberenets`)  
+**Total Study Material:** 10,000+ lines (all guides combined)  
 **Topics Mastered:** 50+  
 **Interview Scenarios:** 25+  
 **Code Examples:** 100+
