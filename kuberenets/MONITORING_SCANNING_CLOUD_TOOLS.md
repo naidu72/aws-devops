@@ -9,6 +9,7 @@
 6. [HashiCorp Vault & Secrets Management](#hashicorp-vault--secrets-management)
 7. [Integration Patterns](#integration-patterns)
 8. [Interview Questions](#interview-questions)
+9. [Appendix: Plan-required deep dives](#appendix-plan-required-deep-dives-eksaks-interview-depth)
 
 ---
 
@@ -1764,18 +1765,149 @@ A:
 
 ---
 
+## Appendix: Plan-required deep dives (EKS/AKS interview depth)
+
+This section maps explicitly to the **Kubernetes Interview Preparation Plan** items: AlertManager, Elasticsearch/Kibana positioning, OpenTelemetry, OPA/Gatekeeper, kube-bench, and cross-links service mesh / cloud sections above.
+
+### Alertmanager (with Prometheus / kube-prometheus-stack)
+
+**Role:** Receives alerts from Prometheus, **deduplicates**, **routes** to receivers (PagerDuty, Slack, email), supports **silences** and **inhibition**.
+
+**Typical Helm (kube-prometheus-stack):** Alertmanager is deployed as a StatefulSet; Prometheus `alertmanager.config` or `alertmanagerFiles` supplies YAML.
+
+**Minimal config concepts:**
+- **route:** `receiver`, `match` / `match_re`, `continue`, `routes` (sub-routes)
+- **receiver:** `slack_configs`, `email_configs`, `pagerduty_configs`
+- **inhibit_rules:** suppress warnings when critical fires
+
+```yaml
+global:
+  resolve_timeout: 5m
+route:
+  receiver: "default"
+  group_by: ["alertname", "cluster", "namespace"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+  routes:
+  - match:
+      severity: critical
+    receiver: pagerduty
+receivers:
+- name: default
+  slack_configs:
+  - api_url: "${SLACK_WEBHOOK}"
+    channel: "#alerts"
+```
+
+**Interview:** Difference between Prometheus alerting rules and Alertmanager? Prometheus *evaluates* rules and *fires* alerts; Alertmanager *routes*, *groups*, *deduplicates*, and *notifies*.
+
+---
+
+### OpenTelemetry (OTel) — tracing stack (with Jaeger)
+
+**Architecture:**
+- **Instrumentation:** App uses OTel API/SDK (language-specific) → produces traces/metrics/logs.
+- **Collector:** `opentelemetry-collector` receives OTLP (gRPC/HTTP), processes (batch, filter), **exports** to Jaeger, Prometheus, Tempo, cloud backends.
+
+**Why OTel:** Vendor-neutral; **W3C Trace Context** (`traceparent` header) for correlation across services and meshes.
+
+**Collector pipeline snippet (conceptual):**
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+exporters:
+  otlp:
+    endpoint: jaeger-collector.observability.svc:4317
+    tls:
+      insecure: true
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlp]
+```
+
+**Interview:** “Jaeger vs OTel?” — Jaeger is a **backend/UI**; OTel is **instrumentation + collector standard**. Deploy Jaeger with **OTLP** ingest to accept OTel exports natively (Jaeger v1.35+).
+
+---
+
+### OPA Gatekeeper — policy as code (Kubernetes)
+
+**Components:**
+- **ConstraintTemplate** (Rego): defines the policy schema and logic.
+- **Constraint**: binds template to namespaces / kinds (enforces).
+
+**Example:** Require `runAsNonRoot` in Pod security context:
+
+```yaml
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequirednonroot
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredNonRoot
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequirednonroot
+        violation[{"msg": msg}] {
+          not input.review.object.spec.securityContext.runAsNonRoot
+          msg := "Pods must set spec.securityContext.runAsNonRoot: true"
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredNonRoot
+metadata:
+  name: require-non-root
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+```
+
+**Versus OPA standalone:** Gatekeeper = OPA + **K8s CRDs** + **audit** of existing resources.
+
+---
+
+### kube-bench — CIS Kubernetes benchmark
+
+**Purpose:** Run **CIS checks** against API server, etcd, nodes (kubelet), etc.
+
+**Typical usage:**
+```bash
+# Job or DaemonSet runs aquasec/kube-bench against CIS profile
+kube-bench run --targets master,node,etcd,policies
+```
+
+**Output:** PASS/WARN/FAIL per check ID (maps to CIS PDF). **Interview:** Used for **compliance evidence** and hardening gaps—not runtime threat detection (that’s Falco).
+
+---
+
 ## Summary Table
 
 | Tool | Purpose | When to Use | Overhead |
 |------|---------|------------|----------|
 | Prometheus | Metrics collection | Always for monitoring | Medium |
 | Grafana | Visualization | Always for dashboards | Low |
+| Alertmanager | Alert routing & grouping | With Prometheus | Low |
 | Loki | Log aggregation | Cloud-native deployments | Low |
-| Jaeger | Distributed tracing | Microservices debugging | Medium |
+| Elasticsearch/Kibana | Log search & analytics | Large-scale ELK | High |
+| Jaeger | Distributed tracing (backend/UI) | Microservices debugging | Medium |
+| OpenTelemetry | Instrumentation & collector | Standardized traces/metrics/logs | Low–Medium |
 | Istio | Service mesh | Advanced traffic management | High |
-| Cilium | Network policy/security | High-security environments | Low-Medium |
+| Cilium | Network policy/security | High-security environments | Low–Medium |
 | Trivy | Image scanning | CI/CD pipeline | Very Low |
 | Falco | Runtime security | Threat detection | Medium |
+| OPA Gatekeeper | Admission policies | Org-wide K8s policy | Medium |
+| kube-bench | CIS compliance checks | Audits / hardening | Low |
 | AWS Secrets Manager | Secrets storage | AWS deployments | None (managed) |
 | Azure Key Vault | Secrets storage | Azure deployments | None (managed) |
 | Vault | Universal secrets | Multi-cloud | Medium |

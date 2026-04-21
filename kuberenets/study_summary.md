@@ -32,7 +32,8 @@ This folder supersedes older drafts that referenced `/tmp/...`. Every guide list
 | 1 | `README.md` | Master navigation |
 | 2 | `INDEX_COMPLETE_STUDY_PACKAGE.md` | Index and study roadmap |
 | 3 | `k8s_study_guide.md` | Timeline and structure |
-| 4 | `core_resources_guide.yaml` | Compact YAML reference (was missing; now added) |
+| 4 | `core_resources_guide.yaml` | Multi-doc YAML for `kubectl apply` |
+| 4b | `core_resources_guide.md` | Same content as readable Markdown + instructions |
 | 5 | `core_resources_interview_qa.md` | Core resource Q&A |
 | 6 | `storage_concepts_guide.md` | Storage deep dive |
 | 7 | `networking_deep_dive.md` | Networking (replaces old name `networking_guide.md`) |
@@ -46,6 +47,7 @@ This folder supersedes older drafts that referenced `/tmp/...`. Every guide list
 | 15 | `INTERVIEW_PREP_COMPLETE_FINAL.md` | Final checklist |
 | 16 | `INTERVIEW_PREP_COMPLETE.md` | Older snapshot (paths updated) |
 | 17 | `study_summary.md` | This file |
+| 18 | `PLAN_IMPLEMENTATION_MAP.md` | Maps each **plan todo id** to the file/section that covers it |
 
 ---
 

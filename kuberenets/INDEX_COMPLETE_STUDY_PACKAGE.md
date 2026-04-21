@@ -7,6 +7,8 @@
 
 Paths below are **filenames in that folder** (same directory as this index).
 
+**Plan tracking:** Open `PLAN_IMPLEMENTATION_MAP.md` to map each **plan todo id** (e.g. `monitoring_tools`, `tracing_stack`) to the file and section that implements it—without editing the plan file itself.
+
 ### 1. **CRDs & Operators Deep Dive** 
 📄 **File:** `crds_operators_guide.md` (~900 lines)
 
