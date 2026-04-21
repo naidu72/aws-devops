@@ -10,6 +10,7 @@ All markdown paths below are **relative to this directory** (same folder as this
 
 | File | Purpose |
 |------|---------|
+| [k8s_study_guide_PARTS_1-9_DETAILED.md](k8s_study_guide_PARTS_1-9_DETAILED.md) | **Teaching narrative for Parts 1–9** (same outline as [k8s_study_guide.md](k8s_study_guide.md)) |
 | [PLAN_IMPLEMENTATION_MAP.md](PLAN_IMPLEMENTATION_MAP.md) | **Maps plan todo IDs → files/sections** (use with the official plan doc) |
 | [INDEX_COMPLETE_STUDY_PACKAGE.md](INDEX_COMPLETE_STUDY_PACKAGE.md) | Master index, topic checklist, study plan |
 | [study_summary.md](study_summary.md) | Module status and file map (kept in sync with this README) |

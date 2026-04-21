@@ -1,5 +1,35 @@
 # Kubernetes Interview Preparation - Execution Guide
 
+## Where the detailed explanations live
+
+### All Parts 1–9 in one teaching document (start here)
+
+| Document | What it is |
+|----------|------------|
+| **[k8s_study_guide_PARTS_1-9_DETAILED.md](k8s_study_guide_PARTS_1-9_DETAILED.md)** | **Full narrative explanations** for Part 1 (Pods through Ingress) through Part 9 (Q&A bank with short answers). This is the file to read when you want each part explained in one place. |
+
+This file (`k8s_study_guide.md`) remains the **schedule, weeks, and checklist**. For **encyclopedic depth** on a single topic, use the specialist guides below.
+
+### Specialist deep dives (same folder `kuberenets/`)
+
+| Part in this guide | Topics (summary) | Deeper reference (beyond the DETAILED guide) |
+|--------------------|------------------|-----------------------------------------------|
+| **Part 1** | Pod, Deployment, StatefulSet, DaemonSet, Job, Service, Ingress | [core_resources_interview_qa.md](core_resources_interview_qa.md), [core_resources_guide.md](core_resources_guide.md), [core_resources_guide.yaml](core_resources_guide.yaml) |
+| **Part 2** | PV, PVC, StorageClass, volume types | [storage_concepts_guide.md](storage_concepts_guide.md) |
+| **Part 3** | CNI, NetworkPolicy, CoreDNS, kube-proxy, EndpointSlices | [networking_deep_dive.md](networking_deep_dive.md) |
+| **Part 4** | EKS, AKS, bare metal / kubeadm | [eks_architecture_guide.md](eks_architecture_guide.md), [aks_architecture_guide.md](aks_architecture_guide.md), [bare_metal_kubernetes_guide.md](bare_metal_kubernetes_guide.md) |
+| **Part 5** | Prometheus, Grafana, Loki, ELK, Jaeger, OpenTelemetry | [MONITORING_SCANNING_CLOUD_TOOLS.md](MONITORING_SCANNING_CLOUD_TOOLS.md) |
+| **Part 6** | AWS/Azure secrets, KMS, Vault, External Secrets | [MONITORING_SCANNING_CLOUD_TOOLS.md](MONITORING_SCANNING_CLOUD_TOOLS.md) Part 4+ |
+| **Part 7** | Hands-on practicals | [remaining_modules_summary.md](remaining_modules_summary.md), [MONITORING_SCANNING_CLOUD_TOOLS.md](MONITORING_SCANNING_CLOUD_TOOLS.md), [CICD_DEPLOYMENT_TOOLS.md](CICD_DEPLOYMENT_TOOLS.md) |
+| **Part 8** | Mock interviews | [Phase5-Interview-Practice.md](../Phase5-Interview-Practice.md), [INTERVIEW_PREP_COMPLETE_FINAL.md](INTERVIEW_PREP_COMPLETE_FINAL.md) |
+| **Part 9** | Question bank | **Also in** [k8s_study_guide_PARTS_1-9_DETAILED.md](k8s_study_guide_PARTS_1-9_DETAILED.md) §Part 9; more Q&A in [core_resources_interview_qa.md](core_resources_interview_qa.md), [networking_deep_dive.md](networking_deep_dive.md) |
+
+**More “everything in one map”:** [MASTER_COVERAGE.md](../MASTER_COVERAGE.md), [CONCEPT_COVERAGE_MATRIX.md](../CONCEPT_COVERAGE_MATRIX.md) (repo root).
+
+**Workspace paths** inside this guide (e.g. `hansen-cloud-native-apps/...`) point to **your separate code repos** for real Helm/YAML examples—they are not duplicated inside `kuberenets/`.
+
+---
+
 ## Part 1: Core K8s Resources (Week 1-2)
 
 ### Study Resources:

@@ -34,7 +34,8 @@ This folder supersedes older drafts that referenced `/tmp/...`. Every guide list
 |---|------|--------|
 | 1 | `README.md` | Master navigation |
 | 2 | `INDEX_COMPLETE_STUDY_PACKAGE.md` | Index and study roadmap |
-| 3 | `k8s_study_guide.md` | Timeline and structure |
+| 3 | `k8s_study_guide.md` | Timeline and structure (checklist) |
+| 3b | `k8s_study_guide_PARTS_1-9_DETAILED.md` | **Full explanations for Parts 1–9** (same outline as #3) |
 | 4 | `core_resources_guide.yaml` | Multi-doc YAML for `kubectl apply` |
 | 4b | `core_resources_guide.md` | Same content as readable Markdown + instructions |
 | 5 | `core_resources_interview_qa.md` | Core resource Q&A |
